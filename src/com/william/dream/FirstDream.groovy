@@ -24,8 +24,9 @@ class FirstDream {
 
         /*字符Characters()*/
 
-        GroovyType()
+        /*GroovyType()*/
 
+        GroovyOperation()
     }
 
     private static 注释() {
@@ -218,9 +219,9 @@ line three
     }
 
     static void GroovyType() {
-        /*整型()
+        整型()
         浮点型()
-        Booleans类型()*/
+        Booleans类型()
         Lists类型()
         Arrays类型()
         Maps类型()
@@ -277,31 +278,32 @@ line three
 
     /*Groovy同样支持java.util.List类型，在Groovy中同样允许向列表中增加或者删除对象，允许在运行时改变列表的大小，保存在列表中的对象不受类型的限制*/
     /*此外还可以通过超出列表范围的数来索引列表*/
+
     static def Lists类型() {
         // 使用动态List
-        def numbers = [1,2,3]
+        def numbers = [1, 2, 3]
         println numbers instanceof List
         println numbers.size() == 3
 
         // List中存储任意类型
-        def  heterogeneous = [1,"a",true]
+        def heterogeneous = [1, "a", true]
 
         // 判断List的默认类型
-        def arrayList =[1,2,3]
+        def arrayList = [1, 2, 3]
         println arrayList instanceof ArrayList
 
         // 使用as强转类型
-        def linkedList = [2,3,4] as LinkedList
+        def linkedList = [2, 3, 4] as LinkedList
         println linkedList instanceof LinkedList
 
         // 定义指定类型的List
-        LinkedList otherLinked = [3,4,5]
+        LinkedList otherLinked = [3, 4, 5]
         println otherLinked instanceof LinkedList
 
         println("++++++++++++++++++++++++++++++++")
 
         // 定义List使用
-        def letters = ['a','b','c','d']
+        def letters = ['a', 'b', 'c', 'd']
         // 判断item值
         println letters[0] == 'a'
         println letters[1] == 'b'
@@ -318,7 +320,7 @@ line three
 
         //给List追加item
         letters << 'e'
-        println letters[ 4] == 'e'
+        println letters[4] == 'e'
         println letters[-1] == 'e'
 
         //获取一段List子集
@@ -332,11 +334,104 @@ line three
     }
 
     static def Arrays类型() {
+        // 定义初始化数组【String】
+        String[] arrStr = ['Ananas', 'Banana', 'Kiwi']
+        println arrStr instanceof String[]
+        println !(arrStr instanceof List)
+
+        println("++++++++++++++++++++++++++++++++")
+
+        //使用def定义初始化int数组
+        def numArr = [1, 2, 3] as int[]
+        println numArr instanceof int[]
+        println numArr.size() == 3
+
+        println("++++++++++++++++++++++++++++++++")
+
+        //声明定义多维数组指定宽度
+        def matrix3 = new Integer[3][3]
+        println matrix3.size() == 3
+
+        //声明多维数组不指定宽度
+        Integer[][] matrix2
+        matrix2 = [[1, 2], [3, 4]]
+        println matrix2 instanceof Integer[][]
+
+        println("++++++++++++++++++++++++++++++++")
+
+        //数组的元素使用及赋值操作
+        String[] names = ['Cédric', 'Guillaume', 'Jochen', 'Paul']
+        println names[0] == 'Cédric'
+
+        names[2] = 'Blackdrag'
+        println names[2] == 'Blackdrag'
 
     }
 
+    /*Map是“键-值”对的集合，在Groovy中键key不一定是String，可以是任何对象(实际上Groovy中的Map就是java.util.Linke dHashMap)*/
+
     static void Maps类型() {
 
+        // 定义一个Map
+        def colors = [red: '#FF0000', green: '#00FF00', blue: '#0000FF']
+
+        // 获取一些指定的key的value进行判断
+        println(colors['red'] == '#FF0000')
+        println(colors.green == '#00FF00')
+
+        println("++++++++++++++++++++++++++++++++")
+
+        //给指定key的对赋值value操作与判断
+        colors['pink'] = '#FF00FF'
+        colors.yellow = '#FFFF00'
+        println colors.pink == '#FF00FF'
+        println colors['yellow'] == '#FFFF00'
+
+        println("++++++++++++++++++++++++++++++++")
+
+        //判断Map的类型
+        println colors instanceof java.util.LinkedHashMap
+
+        //访问Map中不存在的key为null
+        println colors.unknown == null
+
+        //定义key类型为数字的Map
+        def numbers = [1: 'one', 2: 'two']
+        println numbers[1] == 'one'
+
+        println("++++++++++++++++++++++++++++++++")
+
+        //把一个定义的变量作为Map的key，访问Map的该key是失败的
+        def key = 'name'
+        def person = [key: 'Guillaume']
+        println !person.containsKey('name')
+        println person.containsKey('key')
+
+        //把一个定义的变量作为Map的key的正确写法---添加括弧，访问Map的该key是成功的
+        person = [(key): 'Guillaume']
+        println person.containsKey('name')
+        println !person.containsKey('key')
+    }
+
+    /*运算符*/
+    /*关于Groovy的运算符介绍类似于上面一样，我们重点突出与Java的不同点，相同点自行脑补*/
+
+    static void GroovyOperation() {
+        /*Groovy支持**次方运算符*/
+        println(2 ** 3 == 8)
+        def f = 3
+        f **= 2 // 3的平方
+        println f == 9
+
+        /*Groovy非运算符*/
+        println ((!true)    == false)
+        println ((!'foo')   == false)
+        println ((!'')      == true)
+
+        /*Groovy支持?.安全占位符，这个运算符主要用于避免空指针异常*/
+//        def person = Person.find { it.id == 123 }
+//        def name = person?.name
+//        assert name == null
     }
 
 }
