@@ -8,15 +8,23 @@ class FirstDream {
 
     static void main(String... args) {
 
-//        注释()
+        /*注释()*/
 
-//        标识符()
+        /*标识符()*/
 
-//        单引号字符串()
+        /*单引号字符串()*/
 
-//        三重单引号字符串()
+        /*三重单引号字符串()*/
 
-        双引号字符串()
+        /*双引号字符串()*/
+
+        /*多重双引号字符串()*/
+
+        /*斜线字符串()*/
+
+        /*字符Characters()*/
+
+        GroovyType()
 
     }
 
@@ -147,5 +155,188 @@ line three
         assert m["a"] == null   //由于key的HashCode不同，所以取不到
     }
 
+    /*多重双引号字符串也支持站位插值操作，我们要特别注意在多重双引号字符串中的单引号和双引号转换问题*/
+
+    static void 多重双引号字符串() {
+        def name = 'Groovy'
+        def template = """
+        Dear Mr ${name},
+
+        You're the winner of the lottery!
+
+        Yours sincerly,
+
+        Dave
+"""
+        assert template.toString().concat('Groovy')
+        println(template)
+    }
+
+    /*斜线字符串其实和双引号字符串很类似，通常用在正则表达式中*/
+    /*特别注意，一个空的斜线字符串会被Groovy解析器解析为一注释*/
+
+    static void 斜线字符串() {
+        //普通使用
+        def fooPattern = /.*foo.*/
+        assert fooPattern == '.*foo.*'
+        println(fooPattern)
+
+        //含转义字符使用
+        def escapeSlash = /The character \/ is a forward slash/
+        assert escapeSlash == 'The character / is a forward slash'
+        println(escapeSlash)
+
+        //多行支持
+        def multilineSlashy = /one
+            two
+            three/
+
+        assert multilineSlashy.contains('\n')
+        println(multilineSlashy)
+
+        //含站位符使用支持
+        def color = 'blue'
+        def interpolatedSlashy = /a ${color} car/
+        assert interpolatedSlashy == 'a blue car'
+        println(interpolatedSlashy)
+    }
+
+    /*不像Java，Groovy没有明确的Characters。但是我们可以有如下三种不同的方式来将字符串作为字符处理*/
+
+    static void 字符Characters() {
+        char c1 = 'A'
+        assert c1 instanceof Character
+        println(c1 instanceof Character)
+
+        def c2 = 'B' as char
+        assert c2 instanceof Character
+        println(c2 instanceof Character)
+
+        def c3 = (char) 'C'
+        assert c3 instanceof Character
+        println(c3 instanceof Character)
+    }
+
+    static void GroovyType() {
+        /*整型()
+        浮点型()
+        Booleans类型()*/
+        Lists类型()
+        Arrays类型()
+        Maps类型()
+    }
+
+    /*Groovy像Java一样支持如下一些整型，byte、char、short、int、long、java.lang.BigInteger*/
+
+    static def 整型() {
+        // primitive types-原始类型-内嵌类型
+        byte b = 1
+        char c = 2
+        short s = 3
+        int i = 4
+        long l = 5
+
+        // infinite precision - 无限精度
+        BigInteger bi = 6
+
+        // 8-进制
+        int xInt1 = 077
+        println(xInt1 == 63)
+
+        // 16-进制
+        int xInt2 = 0x77
+        println(xInt2 == 119)
+
+        // 2-进制
+        int xInt = 0b10101111
+        println(xInt == 175)
+    }
+
+    /*Groovy像Java一样支持如下一些浮点型，float、double、java.lang.BigDecimal*/
+
+    static def 浮点型() {
+        // primitive types
+        float f = 1.234
+        double d = 2.345
+
+        // infinite precision
+        BigDecimal bd = 3.456
+
+        println(1e3 == 1_000.0)
+        println(2E4 == 20_000.0)
+        println(3e+1 == 30.0)
+        println(4E-2 == 0.04)
+
+    }
+
+    static def Booleans类型() {
+        def myBooleanVariable = true
+        boolean untypedBooleanVar = false
+        def booleanField = true
+    }
+
+    /*Groovy同样支持java.util.List类型，在Groovy中同样允许向列表中增加或者删除对象，允许在运行时改变列表的大小，保存在列表中的对象不受类型的限制*/
+    /*此外还可以通过超出列表范围的数来索引列表*/
+    static def Lists类型() {
+        // 使用动态List
+        def numbers = [1,2,3]
+        println numbers instanceof List
+        println numbers.size() == 3
+
+        // List中存储任意类型
+        def  heterogeneous = [1,"a",true]
+
+        // 判断List的默认类型
+        def arrayList =[1,2,3]
+        println arrayList instanceof ArrayList
+
+        // 使用as强转类型
+        def linkedList = [2,3,4] as LinkedList
+        println linkedList instanceof LinkedList
+
+        // 定义指定类型的List
+        LinkedList otherLinked = [3,4,5]
+        println otherLinked instanceof LinkedList
+
+        println("++++++++++++++++++++++++++++++++")
+
+        // 定义List使用
+        def letters = ['a','b','c','d']
+        // 判断item值
+        println letters[0] == 'a'
+        println letters[1] == 'b'
+
+        //负数下标则从右向左index
+        println letters[-1] == 'd'
+        println letters[-2] == 'c'
+
+        println("++++++++++++++++++++++++++++++++")
+
+        //指定item赋值判断
+        letters[2] = 'C'
+        println letters[2] == 'C'
+
+        //给List追加item
+        letters << 'e'
+        println letters[ 4] == 'e'
+        println letters[-1] == 'e'
+
+        //获取一段List子集
+        println letters[1, 3] == ['b', 'd'] // 含头不含尾
+        println letters[2..4] == ['C', 'd', 'e'] // 闭区间
+
+        //多维List支持
+        def multi = [[0, 1], [2, 3]]
+        println multi[1][0] == 2
+
+    }
+
+    static def Arrays类型() {
+
+    }
+
+    static void Maps类型() {
+
+    }
 
 }
