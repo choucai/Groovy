@@ -1,5 +1,8 @@
 package com.william.dream
 
+import com.william.dream.bean.Car
+import com.william.dream.bean.User
+
 /**
  * Created by william on 16-11-17.
  */
@@ -417,21 +420,58 @@ line three
     /*关于Groovy的运算符介绍类似于上面一样，我们重点突出与Java的不同点，相同点自行脑补*/
 
     static void GroovyOperation() {
+
+
         /*Groovy支持**次方运算符*/
-        println(2 ** 3 == 8)
+        println(2**3 == 8)
         def f = 3
         f **= 2 // 3的平方
         println f == 9
 
+
         /*Groovy非运算符*/
-        println ((!true)    == false)
-        println ((!'foo')   == false)
-        println ((!'')      == true)
+        println((!true) == false)
+        println((!'foo') == false)
+        println((!'') == true)
+
 
         /*Groovy支持?.安全占位符，这个运算符主要用于避免空指针异常*/
 //        def person = Person.find { it.id == 123 }
 //        def name = person?.name
 //        assert name == null
+
+
+        /*Groovy支持.@直接域访问操作符，因为Groovy自动支持属性getter方法，但有时候我们有一个自己写的特殊getter方法，当不想调用这个特殊的getter方法则可以用直接域访问操作符*/
+        def user = new User('Bob')
+        println(user.name == 'Name:Bob')
+        println(user.@name == 'Bob')
+
+
+        /*Groovy支持.&方法指针操作符，因为闭包可以被作为一个方法的参数，如果想让一个方法作为另一个方法的参数则可以将一个方法当成一个闭包作为另一个方法的参数*/
+        def list = ['a', 'b', 'c', 'd']
+        // 常规写法
+        list.each {
+            println(it)
+        }
+        //方法指针操作符写法
+        list.each {this.&printName}
+
+        /*Groovy支持将?:三目运算符简化为二目*/
+        String displayName = user.name ? user.name : 'Anonymous'
+        displayName = user.name ?: 'Anonymous'
+
+
+        /*Groovy支持【*.】展开运算符，一个集合使用【展开运算符】可以得到一个元素为原集合各个元素执行后面指定方法所得值的集合*/
+        def cars = [
+                new Car(make: 'Peugeot', model: '508'),
+                null,
+                new Car(make: 'Renault', model: 'Clio')]
+        assert cars*.make == ['Peugeot', null, 'Renault']
+        assert null*.make == null
     }
 
+
+    String printName(name) {
+        println(name)
+    }
 }
