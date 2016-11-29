@@ -1,0 +1,8 @@
+{
+  "server": "jp01-14.ssv7.net",
+  "server_port": 23216,
+  "password": "o8REpExENLTT",
+  "method": "aes-256-cfb",
+  "remarks": "",
+  "auth": false
+}
