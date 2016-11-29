@@ -6,7 +6,7 @@ import com.william.dream.bean.User
 /**
  * Created by william on 16-11-17.
  */
-class FirstDream {
+class Base01 {
 
 
     static void main(String... args) {
