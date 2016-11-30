@@ -1,5 +1,7 @@
 package com.william.dream
 
+import groovy.io.FileType
+
 /**
  * Created by william on 16-11-29.
  *
@@ -17,8 +19,8 @@ class Base03 {
     }
 
     static void IO操作() {
-        读文件操作()
-        写文件操作()
+        /*读文件操作()*/
+        /*写文件操作()*/
         文件树操作()
         执行外部程序()
     }
@@ -27,8 +29,7 @@ class Base03 {
     static def 读文件操作() {
         File dir = new File('')
         def baseDir = dir.getCanonicalPath()
-
-        File fileScript = new File(baseDir,'dream.txt')
+        File fileScript = new File(baseDir, 'dream.txt')
 
         // 读取文件打印脚本
         fileScript.eachLine { line -> println(line) }
@@ -36,7 +37,7 @@ class Base03 {
         println("---------------------------------")
 
         // 读文件打印内容以及行号
-        fileScript.eachLine { line,nb -> println "Line $nb: $line" }
+        fileScript.eachLine { line, nb -> println "Line $nb: $line" }
 
         println("---------------------------------")
 
@@ -50,7 +51,7 @@ class Base03 {
         }*/
 
         //把读到的文件行内容全部存入List列表中
-        def list = fileScript.collect {it}
+        def list = fileScript.collect { it }
         println(list)
 
         //把读到的文件行内容全部存入String数组列表中
@@ -63,22 +64,86 @@ class Base03 {
 
         //把读到的文件转为InputStream，切记此方式需要手动关闭流
         def is = fileScript.newInputStream()
-        // do
+        // do something
         is.close()
 
+        //把读到的文件以InputStream闭包操作，此方式不需要手动关闭流
+        fileScript.withInputStream { stream ->
+            // do something
+        }
 
 
     }
 
     static def 写文件操作() {
+        File fileScript = new File('william.txt')
+
+        //向一个文件以utf-8编码写三行文字
+        fileScript.withWriter('utf-8') { writer ->
+            writer.writeLine 'Into the ancient pond'
+            writer.writeLine 'A frog jumps'
+            writer.writeLine 'Water’s sound!'
+        }
+
+        //上面的写法可以直接替换为此写法
+        fileScript << '''Into the ancient pond
+A frog jumps
+Water’s sound!'''
+
+        // 直接一byte数组形式写入文件
+        // fileScript.bytes = [66, 22, 11]
+
+        //类似上面读操作，可以使用OutputStream进行输出流操作，记得手动关闭
+        /*def os = fileScript.newOutputStream()
+        // do someting
+        os.close()*/
+
+        //类似上面读操作，可以使用OutputStream闭包进行输出流操作，不用手动关闭
+        /*fileScript.withOutputStream {stream ->
+            // do something
+        }*/
 
 
     }
 
 
     static def 文件树操作() {
+        File dir = new File('').getCanonicalFile()
 
+        //遍历所有指定路径下文件名打印
+        dir.eachFile { file ->
+            println(file.name)
+        }
 
+        println('...............遍历所有指定路径下符合正则匹配的文件名打印................')
+
+        //遍历所有指定路径下符合正则匹配的文件名打印
+        dir.eachFileMatch(~/.*\.txt/) { file ->
+            println file.name
+        }
+
+        /*println('..............深度遍历打印名字.................')
+        //深度遍历打印名字
+        dir.eachFileRecurse {file ->
+            println file.name
+        }*/
+
+        println('..............深度遍历打印名字，只包含文件类型.................')
+        //深度遍历打印名字，只包含文件类型
+        dir.eachFileRecurse(FileType.FILES) { file ->
+            println file.name
+        }
+
+        println('..............允许设置特殊标记规则的遍历操作.................')
+        //允许设置特殊标记规则的遍历操作
+        dir.traverse { file ->
+            if (file.directory && file.name=='bin') {
+                FileVisitResult.TERMINATE
+            } else {
+                println file.name
+                FileVisitResult.CONTINUE
+            }
+        }
     }
 
 
