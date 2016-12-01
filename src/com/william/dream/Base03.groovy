@@ -15,14 +15,15 @@ class Base03 {
 
         IO操作()
 
+        UsedTool()
 
     }
 
     static void IO操作() {
         /*读文件操作()*/
         /*写文件操作()*/
-        文件树操作()
-        执行外部程序()
+        /*文件树操作()*/
+        /*执行外部程序()*/
     }
 
 
@@ -136,21 +137,57 @@ Water’s sound!'''
 
         println('..............允许设置特殊标记规则的遍历操作.................')
         //允许设置特殊标记规则的遍历操作
-        dir.traverse { file ->
+        /*dir.traverse { file ->
             if (file.directory && file.name=='bin') {
                 FileVisitResult.TERMINATE
             } else {
                 println file.name
                 FileVisitResult.CONTINUE
             }
-        }
+        }*/
     }
 
 
     static void 执行外部程序() {
+        def progress = "ls -l".execute()
+        println "Found text ${progress.text}"
 
+        println('..............................................................')
+
+        def progresser = "ls -l".execute()
+        progresser.in.eachLine {line ->
+            println line
+        }
 
     }
 
+    /**
+     * 有用的工具类
+     */
+    static void UsedTool() {
+
+        /*ConfigSlurper是一个配置管理文件读取工具类，类似于Java的*.properties文件*/
+        def config = new ConfigSlurper().parse('''
+            app.date = new Date()
+            app.age = 42
+            app {
+                name = "Test${42}"
+            }
+        ''')
+
+        println(config.app.date instanceof Date)
+        println(config.app.age == 42)
+        println(config.app.name == 'Test42')
+
+        println('..............................................................')
+
+        /*Expando扩展*/
+        def expando = new Expando()
+        expando.toString = {-> 'John'}
+        expando.say = {String s -> "John says:${s}"}
+
+        println(expando as String == 'John')
+        println(expando.say('Hi') == 'John says:Hi')
+    }
 
 }
